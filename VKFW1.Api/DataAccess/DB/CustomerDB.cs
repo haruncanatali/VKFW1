@@ -1,4 +1,6 @@
 using VKFW1.Api.Entities;
+using VKFW1.Api.Enums;
+using VKFW1.Api.Extensions;
 using VKFW1.Api.Models;
 
 namespace VKFW1.Api.DataAccess.DB;
@@ -14,7 +16,8 @@ public class CustomerDB
             Surname = "London",
             IdentificationNumber = "12345678912",
             Address = "England",
-            Age = 25
+            Age = 25,
+            Gender = Gender.Male
         },
         new()
         {
@@ -23,7 +26,8 @@ public class CustomerDB
             Surname = "Kemal",
             IdentificationNumber = "98098765432",
             Address = "Turkey",
-            Age = 50
+            Age = 50,
+            Gender = Gender.Male
         }
     };
 
@@ -45,11 +49,12 @@ public class CustomerDB
     {
         Customer customer = new Customer()
         {
-            Name = model.Name,
+            Name = model.Name.ArrangeName(model.Gender),
             Surname = model.Surname,
             IdentificationNumber = model.IdentificationNumber,
             Address = model.Address,
-            Age = model.Age
+            Age = model.Age,
+            Gender = model.Gender
         };
         customers.Add(customer);
     }
@@ -70,7 +75,7 @@ public class CustomerDB
 
         if (entity != null)
         {
-            entity.Name = name;
+            entity.Name = name.ArrangeName(entity.Gender);
             entity.Surname = surname;
         }
     }
@@ -82,11 +87,12 @@ public class CustomerDB
         if (entity != null)
         {
             entity.Id = customer.Id;
-            entity.Name = customer.Name;
+            entity.Name = customer.Name.ArrangeName(customer.Gender);
             entity.Surname = customer.Surname;
             entity.IdentificationNumber = customer.IdentificationNumber;
             entity.Address = customer.Address;
             entity.Age = customer.Age;
+            entity.Gender = customer.Gender;
         }
     }
 }

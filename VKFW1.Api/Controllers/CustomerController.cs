@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using VKFW1.Api.DataAccess.Abstract;
 using VKFW1.Api.DataAccess.DB;
 using VKFW1.Api.Entities;
 using VKFW1.Api.Models;
@@ -9,12 +10,21 @@ namespace VKFW1.Api.Controllers;
 [Route("[controller]")]
 public class CustomerController : ControllerBase
 {
+    private readonly ILogger<CustomerController> _logger;
+    private readonly ICustomerService _customerService;
+    public CustomerController(ILogger<CustomerController> logger, ICustomerService customerService)
+    {
+        _logger = logger;
+        _customerService = customerService;
+    }
+    
     [HttpGet("{id}")]
     public async Task<ActionResult<Customer>> Get(long id)
     {
         if (ModelState.IsValid)
         {
-            return Ok(CustomerDB.GetById(id));
+            _logger.LogInformation($"{id} li musteri getirildi.");
+            return Ok(_customerService.GetById(id));
         }
 
         return BadRequest(ModelState);
@@ -25,7 +35,8 @@ public class CustomerController : ControllerBase
     {
         if (ModelState.IsValid)
         {
-            return Ok(CustomerDB.GetList(name, order));
+            _logger.LogInformation($"musteriler listelendi.");
+            return Ok(_customerService.GetList(name, order));
         }
 
         return BadRequest(ModelState);
@@ -38,7 +49,8 @@ public class CustomerController : ControllerBase
     {
         if (ModelState.IsValid)
         {
-            CustomerDB.Add(model);
+            _customerService.Add(model);
+            _logger.LogInformation($"musteri olusturuldu");
             return Ok();
         }
 
@@ -52,7 +64,8 @@ public class CustomerController : ControllerBase
     {
         if (ModelState.IsValid)
         {
-            CustomerDB.Update(model);
+            _customerService.Update(model);
+            _logger.LogInformation($"{model.Id} li musteri guncellendi.");
             return Ok();
         }
 
@@ -66,7 +79,8 @@ public class CustomerController : ControllerBase
     {
         if (ModelState.IsValid)
         {
-            CustomerDB.UpdatePatch(model.Id,model.Name,model.Surname);
+            _customerService.UpdatePatch(model.Id,model.Name,model.Surname);
+            _logger.LogInformation($"{model.Id} li musteri guncellendi.");
             return Ok();
         }
 
@@ -79,7 +93,8 @@ public class CustomerController : ControllerBase
     {
         if (ModelState.IsValid)
         {
-            CustomerDB.Delete(id);
+            _customerService.Delete(id);
+            _logger.LogInformation($"{id} li musteri silindi.");
             return NoContent();
         }
 

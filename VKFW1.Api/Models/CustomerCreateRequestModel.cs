@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using VKFW1.Api.Enums;
 
 namespace VKFW1.Api.Models;
 
@@ -18,4 +19,6 @@ public class CustomerCreateRequestModel
     public string Address { get; set; }
     [Required(ErrorMessage = "Yaş alanı zorunludur.")]
     public int Age { get; set; }
+    [Required(ErrorMessage = "Cinsiyet alanı zorunludur.")]
+    public Gender Gender { get; set; }
 }
